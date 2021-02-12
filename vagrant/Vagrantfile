@@ -13,11 +13,7 @@ Vagrant.configure("2") do |config|
     config.vm.define "elastic-1" do |elastic1|
         elastic1.vm.box = "generic/rhel7"
         elastic1.vm.box_check_update = false
-        # elastic1.ssh.verify_host_key = :never
-        # elastic1.ssh.username = "vagrant"
-        # elastic1.ssh.password = "vagrant"
         elastic1.vm.network "private_network", ip: "192.168.33.100"
-        # elastic1.vm.network "forwarded_port", guest: 22, host: 2230
         elastic1.vm.network "forwarded_port", id: "ssh", host: 22222, guest: 22
         elastic1.vm.provider "virtualbox" do |vb|
             vb.memory = "1024"
@@ -29,25 +25,35 @@ Vagrant.configure("2") do |config|
         SHELL
     end
 
-    # config.vm.define "elastic-2" do |elastic2|
-    #     elastic2.vm.box = "generic/rhel7"
-    #     elastic2.vm.box_check_update = false
-    #     elastic2.vm.network "private_network", ip: "192.168.33.101"
-    #     elastic2.vm.network "forwarded_port", guest: 22, host: 2226
-    #     elastic2.vm.provider "virtualbox" do |vb|
-    #         vb.memory = "1024"
-    #     end
-    # end
+    config.vm.define "elastic-2" do |elastic2|
+        elastic2.vm.box = "generic/rhel7"
+        elastic2.vm.box_check_update = false
+        elastic2.vm.network "private_network", ip: "192.168.33.101"
+        elastic2.vm.network "forwarded_port", id: "ssh", host: 22223, guest: 22
+        elastic2.vm.provider "virtualbox" do |vb|
+            vb.memory = "1024"
+        end
 
-    # config.vm.define "elastic-3" do |elastic3|
-    #     elastic3.vm.box = "generic/rhel7"
-    #     elastic3.vm.box_check_update = false
-    #     elastic3.vm.network "private_network", ip: "192.168.33.102"
-    #     elastic3.vm.network "forwarded_port", guest: 22, host: 2227
-    #     elastic3.vm.provider "virtualbox" do |vb|
-    #         vb.memory = "1024"
-    #     end
-    # end
+        elastic2.vm.provision "file", source: "./id_rsa.pub", destination: "~/.ssh/ansible.pub"
+        elastic2.vm.provision "shell", inline: <<-SHELL
+            cat /home/vagrant/.ssh/ansible.pub >> /home/vagrant/.ssh/authorized_keys
+        SHELL
+    end
+
+    config.vm.define "elastic-3" do |elastic3|
+        elastic3.vm.box = "generic/rhel7"
+        elastic3.vm.box_check_update = false
+        elastic3.vm.network "private_network", ip: "192.168.33.102"
+        elastic3.vm.network "forwarded_port", id: "ssh", host: 22224, guest: 22
+        elastic3.vm.provider "virtualbox" do |vb|
+            vb.memory = "1024"
+        end
+
+        elastic3.vm.provision "file", source: "./id_rsa.pub", destination: "~/.ssh/ansible.pub"
+        elastic3.vm.provision "shell", inline: <<-SHELL
+            cat /home/vagrant/.ssh/ansible.pub >> /home/vagrant/.ssh/authorized_keys
+        SHELL
+    end
   
     
   
