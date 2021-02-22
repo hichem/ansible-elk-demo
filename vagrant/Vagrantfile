@@ -14,7 +14,8 @@ Vagrant.configure("2") do |config|
         ansible.vm.box = "centos/7"
         ansible.vm.box_check_update = false
         ansible.vm.network "private_network", ip: "192.168.33.50"
-        ansible.vm.network "forwarded_port", id: "ssh", host: 22220, guest: 22
+        ansible.vm.network "forwarded_port", id: "ssh", host: 20220, guest: 22
+        ansible.vm.synced_folder "C:\\vagrant", "/home/vagrant/share", type: "virtualbox"
         ansible.vm.provider "virtualbox" do |vb|
             vb.memory = "1024"
             vb.customize ["modifyvm", :id, "--cableconnected1", "on"]
@@ -34,6 +35,9 @@ Vagrant.configure("2") do |config|
             yum -y install ansible
             ansible --version
 
+            # Update kernel if need to install guest additions for shared folders
+            yum -y update kernel
+
         SHELL
     end
 
@@ -41,7 +45,7 @@ Vagrant.configure("2") do |config|
         elastic1.vm.box = "centos/7"
         elastic1.vm.box_check_update = false
         elastic1.vm.network "private_network", ip: "192.168.33.100"
-        elastic1.vm.network "forwarded_port", id: "ssh", host: 22221, guest: 22
+        elastic1.vm.network "forwarded_port", id: "ssh", host: 20221, guest: 22
         elastic1.vm.provider "virtualbox" do |vb|
             vb.memory = "1024"
             vb.customize ["modifyvm", :id, "--cableconnected1", "on"]
@@ -57,7 +61,7 @@ Vagrant.configure("2") do |config|
         elastic2.vm.box = "centos/7"
         elastic2.vm.box_check_update = false
         elastic2.vm.network "private_network", ip: "192.168.33.101"
-        elastic2.vm.network "forwarded_port", id: "ssh", host: 22222, guest: 22
+        elastic2.vm.network "forwarded_port", id: "ssh", host: 20222, guest: 22
         elastic2.vm.provider "virtualbox" do |vb|
             vb.memory = "1024"
             vb.customize ["modifyvm", :id, "--cableconnected1", "on"]
@@ -73,7 +77,7 @@ Vagrant.configure("2") do |config|
         elastic3.vm.box = "centos/7"
         elastic3.vm.box_check_update = false
         elastic3.vm.network "private_network", ip: "192.168.33.102"
-        elastic3.vm.network "forwarded_port", id: "ssh", host: 22223, guest: 22
+        elastic3.vm.network "forwarded_port", id: "ssh", host: 20223, guest: 22
         elastic3.vm.provider "virtualbox" do |vb|
             vb.memory = "1024"
             vb.customize ["modifyvm", :id, "--cableconnected1", "on"]
